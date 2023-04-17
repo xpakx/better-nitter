@@ -51,6 +51,12 @@ function selectItem(next) {
     item.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
+function deSelect() {
+    const item = items[active];
+    item.classList.remove('selected');
+    active = null;
+}
+
 function goToLink(selector, newTab = false) {
     const link = items[active].querySelector(selector);
     if (!link) {
@@ -73,6 +79,14 @@ function goToProfile(newTab = false) {
     goToLink('.fullname', newTab);
 }
 
+function goToContainer(newTab = false) {
+    goToLink('.card-container', newTab);
+}
+
+function goToQuote(newTab = false) {
+    goToLink('.quote-link', newTab);
+}
+
 document.addEventListener('keydown', function (event) {
     if (event.key === 'j') {
         prev();
@@ -82,5 +96,11 @@ document.addEventListener('keydown', function (event) {
         goToTweet(event.altKey);
     } else if (event.key === 'a' && active != null) {
         goToProfile(event.altKey);
+    } else if (event.key === 'c' && active != null) {
+        goToContainer(event.altKey);
+    } else if (event.key === 'q' && active != null) {
+        goToQuote(event.altKey);
+    } else if (event.key === 'Escape' && active != null) {
+        deSelect();
     }
 });
