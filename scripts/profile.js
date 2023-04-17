@@ -12,17 +12,38 @@ document.addEventListener("DOMContentLoaded", () => {
             style.innerHTML = css;
             document.head.insertAdjacentElement('beforeend', style);
         });
+
+    addChangeObserver();
 });
+
+function addChangeObserver() {
+    var observer = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+            if (mutation.addedNodes.length) {
+                items = document.querySelectorAll(".timeline-item");
+            }
+        });
+    });
+    const timeline = document.querySelector(".timeline");
+    if (timeline) {
+        observer.observe(timeline, { childList: true });
+    } else {
+        const conv = document.querySelector(".conversation");
+        if (conv) {
+            observer.observe(conv, { childList: true, subtree: true });
+        }
+    }
+}
 
 function focusOnMain() {
     const mainTweet = document.querySelector(".main-tweet");
     const tweet = mainTweet ? mainTweet : document.querySelector("#m");
-    if(!tweet) {
+    if (!tweet) {
         return;
     }
     const item = tweet.querySelector(".timeline-item");
-    for(let i = 0; i < items.length; i++) {
-        if(item === items[i]) {
+    for (let i = 0; i < items.length; i++) {
+        if (item === items[i]) {
             selectItem(i);
             return;
         }
