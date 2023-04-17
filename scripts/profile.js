@@ -3,7 +3,7 @@ let active = null;
 
 document.addEventListener("DOMContentLoaded", () => {
     items = document.querySelectorAll(".timeline-item");
-    //TODO: set item under .main-tweet / #m as active if exist
+    focusOnMain();
 
     fetch(chrome.runtime.getURL("styles/style.css"))
         .then(response => response.text())
@@ -13,6 +13,21 @@ document.addEventListener("DOMContentLoaded", () => {
             document.head.insertAdjacentElement('beforeend', style);
         });
 });
+
+function focusOnMain() {
+    const mainTweet = document.querySelector(".main-tweet");
+    const tweet = mainTweet ? mainTweet : document.querySelector("#m");
+    if(!tweet) {
+        return;
+    }
+    const item = tweet.querySelector(".timeline-item");
+    for(let i = 0; i < items.length; i++) {
+        if(item === items[i]) {
+            selectItem(i);
+            return;
+        }
+    }
+}
 
 
 function next() {
