@@ -74,11 +74,11 @@ function goToProfile(newTab = false) {
 }
 
 document.addEventListener('keydown', function (event) {
-    if (event.key === 'w') {
+    if (event.key === 'j') {
         prev();
-    } else if (event.key === 's') {
+    } else if (event.key === 'k') {
         next();
-    } else if (event.key === 'Enter' && active != null) {
+    } else if (event.key === ' ' && active != null) {
         goToTweet(event.altKey);
     } else if (event.key === 'a' && active != null) {
         goToProfile(event.altKey);
