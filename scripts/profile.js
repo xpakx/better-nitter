@@ -93,6 +93,7 @@ document.addEventListener('keydown', function (event) {
     } else if (event.key === 'k') {
         next();
     } else if (event.key === ' ' && active != null) {
+        event.preventDefault();
         goToTweet(event.altKey);
     } else if (event.key === 'a' && active != null) {
         goToProfile(event.altKey);
