@@ -1,5 +1,6 @@
 let items = [];
 let active = null;
+let gPressed = false;
 
 document.addEventListener("DOMContentLoaded", () => {
     items = document.querySelectorAll(".timeline-item");
@@ -18,11 +19,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function addChangeObserver() {
     var observer = new MutationObserver(function (mutations) {
-        mutations.forEach(function (mutation) {
-            if (mutation.addedNodes.length) {
-                items = document.querySelectorAll(".timeline-item");
-            }
-        });
+        const change = mutations.some((mutation) => mutation.addedNodes.length);
+        if (change) {
+            items = document.querySelectorAll(".timeline-item");
+        }
     });
     const timeline = document.querySelector(".timeline");
     if (timeline) {
@@ -61,12 +61,15 @@ function prev() {
 
 
 function selectItem(next) {
+    if(next < 0 || next >= items.length) {
+        return;
+    }
     if (active != null) {
         const prevItem = items[active];
         prevItem.classList.remove('selected');
     }
 
-    active = next >= 0 ? next % items.length : items.length - 1;
+    active = next;
     const item = items[active];
     item.classList.add('selected');
     item.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -124,5 +127,15 @@ document.addEventListener('keydown', function (event) {
         goToQuote(event.altKey);
     } else if (event.key === 'Escape' && active != null) {
         deSelect();
+    } else if (event.key === 'g' && gPressed) {
+        selectItem(0);
+    } else if (event.key === 'g' && !gPressed) {
+        gPressed = true;
+    } else if (event.key === 'G') {
+        selectItem(items.length-1);
+    }
+
+    if (gPressed && event.key !== 'g') {
+        gPressed = false;
     }
 });
