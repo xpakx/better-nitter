@@ -204,16 +204,17 @@ function doVisualCommand(event) {
 
 function exitVisualMode() {
     mode = Modes.Timeline;
-    const myDiv = items[active].querySelector(".tweet-content");
-    myDiv.contentEditable = false;
-    myDiv.blur();
+    const teetContent = items[active].querySelector(".tweet-content");
+    teetContent.contentEditable = false;
+    teetContent.blur();
 }
 
 function enterVisualMode() {
     mode = Modes.Visual;
-    const myDiv = items[active].querySelector(".tweet-content");
-    myDiv.contentEditable = true;
-    myDiv.focus();
+    const tweetContent = items[active].querySelector(".tweet-content");
+    tweetContent.contentEditable = true;
+    tweetContent.setAttribute("spellcheck", "false");
+    tweetContent.focus();
 }
 
 function doNormalCommand(event) {
