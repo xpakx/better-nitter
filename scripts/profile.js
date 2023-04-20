@@ -2,6 +2,14 @@ let items = [];
 let active = null;
 let gPressed = false;
 
+const Modes = {
+    Normal: "normal",
+    Timeline: "timeline",
+    Visual: "visual"
+}
+
+let mode = Modes.Timeline;
+
 document.addEventListener("DOMContentLoaded", () => {
     items = document.querySelectorAll(".timeline-item");
     focusOnMain();
@@ -61,7 +69,7 @@ function prev() {
 
 
 function selectItem(next) {
-    if(next < 0 || next >= items.length) {
+    if (next < 0 || next >= items.length) {
         return;
     }
     if (active != null) {
@@ -112,6 +120,16 @@ function goToQuote(newTab = false) {
 }
 
 document.addEventListener('keydown', function (event) {
+    if (mode === Modes.Timeline) {
+        doTimelineCommand(event);
+    } else if (mode === Modes.Visual) {
+        doVisualCommand(event);
+    } else if (mode == Modes.Normal) {
+        
+    }
+});
+
+function doTimelineCommand(event) {
     if (event.key === 'k') {
         prev();
     } else if (event.key === 'j') {
@@ -132,10 +150,30 @@ document.addEventListener('keydown', function (event) {
     } else if (event.key === 'g' && !gPressed) {
         gPressed = true;
     } else if (event.key === 'G') {
-        selectItem(items.length-1);
+        selectItem(items.length - 1);
+    } else if (event.key === 'v' && active != null) {
+        enterVisualMode();
     }
 
     if (gPressed && event.key !== 'g') {
         gPressed = false;
     }
-});
+}
+
+function doVisualCommand(event) {
+    if (event.key === 'Escape' && active != null) {
+        exitVisualMode();
+    }
+}
+
+function exitVisualMode() {
+    mode = Modes.Timeline;
+}
+
+function enterVisualMode() {
+    mode = Modes.Visual;
+}
+
+function doNormalCommand(event) {
+    
+}
