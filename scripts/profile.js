@@ -154,6 +154,7 @@ function doTimelineCommand(event) {
     } else if (event.key === 'G') {
         selectItem(items.length - 1);
     } else if (event.key === 'v' && active != null) {
+        event.preventDefault();
         enterVisualMode();
     }
 
@@ -163,6 +164,7 @@ function doTimelineCommand(event) {
 }
 
 function doVisualCommand(event) {
+    event.preventDefault();
     if (event.key === 'Escape' && active != null) {
         exitVisualMode();
     }
@@ -170,10 +172,16 @@ function doVisualCommand(event) {
 
 function exitVisualMode() {
     mode = Modes.Timeline;
+    const myDiv = items[active].querySelector(".tweet-content"); 
+    myDiv.contentEditable = false; 
+    myDiv.blur();
 }
 
 function enterVisualMode() {
     mode = Modes.Visual;
+    const myDiv = items[active].querySelector(".tweet-content"); 
+    myDiv.contentEditable = true; 
+    myDiv.focus();
 }
 
 function doNormalCommand(event) {
