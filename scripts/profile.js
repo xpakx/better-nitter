@@ -183,7 +183,23 @@ function doVisualCommand(event) {
                 window.location.href = href;
             }
         }
-    } 
+    } else if (event.key === "l") {
+        const selection = window.getSelection();
+        selection.modify("move", "forward", "character");
+        event.preventDefault();
+    } else if (event.key === "h") {
+        const selection = window.getSelection();
+        selection.modify("move", "backward", "character");
+        event.preventDefault();
+    } else if (event.key === "j") {
+        const selection = window.getSelection();
+        selection.modify("move", "forward", "line");
+        event.preventDefault();
+    } else if (event.key === "k") {
+        const selection = window.getSelection();
+        selection.modify("move", "backward", "line");
+        event.preventDefault();
+    }
 }
 
 function exitVisualMode() {
