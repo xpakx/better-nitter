@@ -163,6 +163,8 @@ function doTimelineCommand(event) {
     }
 }
 
+let move = true;
+
 function doVisualCommand(event) {
     if (event.keyCode < 37 || event.keyCode > 40) {
         event.preventDefault();
@@ -185,20 +187,22 @@ function doVisualCommand(event) {
         }
     } else if (event.key === "l") {
         const selection = window.getSelection();
-        selection.modify("move", "forward", "character");
+        selection.modify(move? "move" : "extend", "forward", "character");
         event.preventDefault();
     } else if (event.key === "h") {
         const selection = window.getSelection();
-        selection.modify("move", "backward", "character");
+        selection.modify(move? "move" : "extend", "backward", "character");
         event.preventDefault();
     } else if (event.key === "j") {
         const selection = window.getSelection();
-        selection.modify("move", "forward", "line");
+        selection.modify(move? "move" : "extend", "forward", "line");
         event.preventDefault();
     } else if (event.key === "k") {
         const selection = window.getSelection();
-        selection.modify("move", "backward", "line");
+        selection.modify(move? "move" : "extend", "backward", "line");
         event.preventDefault();
+    } else if (event.key === "v") {
+        move = !move;
     }
 }
 
