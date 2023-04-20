@@ -9,6 +9,7 @@ const Modes = {
 }
 
 let mode = Modes.Timeline;
+const runtime = typeof browser !== "undefined" ? browser.runtime : chrome.runtime;
 
 document.addEventListener("DOMContentLoaded", () => {
     items = document.querySelectorAll(".timeline-item");
@@ -96,7 +97,8 @@ function goToLink(selector, newTab = false) {
     }
     const href = link.getAttribute('href');
     if (newTab) {
-        window.open(href, '_blank');
+        const resolvedUrl = new URL(href, window.location.href);
+        runtime.sendMessage({ action: "open_tab", url: resolvedUrl });
     } else {
         window.location.href = href;
     }
