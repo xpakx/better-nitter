@@ -127,7 +127,7 @@ document.addEventListener('keydown', function (event) {
     } else if (mode === Modes.Visual) {
         doVisualCommand(event);
     } else if (mode == Modes.Normal) {
-        
+
     }
 });
 
@@ -164,26 +164,42 @@ function doTimelineCommand(event) {
 }
 
 function doVisualCommand(event) {
-    event.preventDefault();
+    if (event.keyCode < 37 || event.keyCode > 40) {
+        event.preventDefault();
+    }
     if (event.key === 'Escape' && active != null) {
         exitVisualMode();
-    }
+    } else if (event.key == ' ') {
+        const selection = window.getSelection();
+        const range = selection.getRangeAt(0);
+        const parentNode = range.startContainer.parentNode;
+
+        if (parentNode.tagName === 'A') {
+            const href = parentNode.getAttribute('href');
+            if (event.altKey) {
+                const resolvedUrl = new URL(href, window.location.href);
+                runtime.sendMessage({ action: "open_tab", url: resolvedUrl });
+            } else {
+                window.location.href = href;
+            }
+        }
+    } 
 }
 
 function exitVisualMode() {
     mode = Modes.Timeline;
-    const myDiv = items[active].querySelector(".tweet-content"); 
-    myDiv.contentEditable = false; 
+    const myDiv = items[active].querySelector(".tweet-content");
+    myDiv.contentEditable = false;
     myDiv.blur();
 }
 
 function enterVisualMode() {
     mode = Modes.Visual;
-    const myDiv = items[active].querySelector(".tweet-content"); 
-    myDiv.contentEditable = true; 
+    const myDiv = items[active].querySelector(".tweet-content");
+    myDiv.contentEditable = true;
     myDiv.focus();
 }
 
 function doNormalCommand(event) {
-    
+
 }
