@@ -203,10 +203,17 @@ function doVisualCommand(event) {
         event.preventDefault();
     } else if (event.key === "v") {
         move = !move;
+    } else if (event.key === "y") {
+        const selectionText = window.getSelection().toString();
+        if (selectionText) {
+            navigator.clipboard.writeText(selectionText);
+        }
+        exitVisualMode();
     }
 }
 
 function exitVisualMode() {
+    move = true;
     mode = Modes.Timeline;
     const teetContent = items[active].querySelector(".tweet-content");
     teetContent.contentEditable = false;
