@@ -121,6 +121,8 @@ function goToQuote(newTab = false) {
     goToLink('.quote-link', newTab);
 }
 
+let number = 0;
+
 document.addEventListener('keydown', function (event) {
     if (mode === Modes.Timeline) {
         doTimelineCommand(event);
@@ -128,6 +130,13 @@ document.addEventListener('keydown', function (event) {
         doVisualCommand(event);
     } else if (mode == Modes.Normal) {
 
+    }
+
+    if (/^[0-9]$/.test(event.key)) {
+        number = (number * 10) + Number(event.key);
+        console.log(number);
+    } else {
+        number = 0;
     }
 });
 
@@ -186,21 +195,13 @@ function doVisualCommand(event) {
             }
         }
     } else if (event.key === "l") {
-        const selection = window.getSelection();
-        selection.modify(move? "move" : "extend", "forward", "character");
-        event.preventDefault();
+        moveCaret("forward", "character");
     } else if (event.key === "h") {
-        const selection = window.getSelection();
-        selection.modify(move? "move" : "extend", "backward", "character");
-        event.preventDefault();
+        moveCaret("backward", "character");
     } else if (event.key === "j") {
-        const selection = window.getSelection();
-        selection.modify(move? "move" : "extend", "forward", "line");
-        event.preventDefault();
+        moveCaret("forward", "line");
     } else if (event.key === "k") {
-        const selection = window.getSelection();
-        selection.modify(move? "move" : "extend", "backward", "line");
-        event.preventDefault();
+        moveCaret("backward", "line");
     } else if (event.key === "v") {
         move = !move;
     } else if (event.key === "y") {
@@ -209,6 +210,17 @@ function doVisualCommand(event) {
             navigator.clipboard.writeText(selectionText);
         }
         exitVisualMode();
+    }
+}
+
+function moveCaret(direction, granularity) {
+    const selection = window.getSelection();
+    if (number == 0) {
+        selection.modify(move ? "move" : "extend", direction, granularity);
+    } else {
+        Array(number).fill().forEach(() => {
+            selection.modify(move ? "move" : "extend", direction, granularity);
+        });
     }
 }
 
