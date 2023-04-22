@@ -9,7 +9,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://t.com.sb/*", "https://nitter.snopyta.org/*"],
+      "matches": ["https://t.com.sb/*", "https://nitter.snopyta.org/*", "https://nitter.net/*"],
       "js": ["scripts/profile.js"],
       "run_at": "document_start"
     }
