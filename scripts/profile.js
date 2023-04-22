@@ -202,6 +202,10 @@ function doVisualCommand(event) {
         moveCaret("forward", "line");
     } else if (event.key === "k") {
         moveCaret("backward", "line");
+    } else if (event.key === "b") {
+        moveCaret("backward", "word");
+    } else if (event.key === "e") {
+        moveCaret("forward", "word");
     } else if (event.key === "v") {
         move = !move;
     } else if (event.key === "y") {
