@@ -1,0 +1,26 @@
+{
+  "name": "better-nitter",
+  "version": "1.0.0",
+  "description": "An add-on to improve my experience with twitter and nitter",
+  "scripts": {
+    "start": "parcel watch src/manifest.json --host localhost",
+    "build": "parcel build src/manifest.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xpakx/better-nitter.git"
+  },
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/xpakx/better-nitter/issues"
+  },
+  "homepage": "https://github.com/xpakx/better-nitter#readme",
+  "devDependencies": {
+    "@parcel/config-webextension": "^2.8.3",
+    "parcel": "^2.8.3",
+    "parcel-bundler": "^1.12.5",
+    "parcel-plugin-web-ext-tool": "^0.2.2",
+    "typescript": "^5.0.4",
+    "web-ext": "^7.6.2"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "Better nitter",
+  "version": "1.0",
+  "description": "Better nitter experience",
+  "icons": {
+    "48": "icons/icon-48.png",
+    "96": "icons/icon-96.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://t.com.sb/*", "https://nitter.snopyta.org/*", "https://nitter.net/*"],
+      "js": ["scripts/profile.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+  {
+  "resources": ["styles/style.css"],
+        "matches": ["https://t.com.sb/*", "https://nitter.snopyta.org/*", "https://nitter.net/*"]
+  }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "tabs"
+  ]
+}
