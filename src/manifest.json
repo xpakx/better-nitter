@@ -9,19 +9,31 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://t.com.sb/*", "https://nitter.snopyta.org/*", "https://nitter.net/*"],
-      "js": ["scripts/profile.js"],
+      "matches": [
+        "https://t.com.sb/*",
+        "https://nitter.snopyta.org/*",
+        "https://nitter.net/*"
+      ],
+      "js": [
+        "scripts/profile.ts"
+      ],
       "run_at": "document_start"
     }
   ],
   "web_accessible_resources": [
-  {
-  "resources": ["styles/style.css"],
-        "matches": ["https://t.com.sb/*", "https://nitter.snopyta.org/*", "https://nitter.net/*"]
-  }
+    {
+      "resources": [
+        "styles/style.css"
+      ],
+      "matches": [
+        "https://t.com.sb/*",
+        "https://nitter.snopyta.org/*",
+        "https://nitter.net/*"
+      ]
+    }
   ],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.ts"
   },
   "permissions": [
     "tabs"

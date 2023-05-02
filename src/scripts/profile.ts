@@ -1,5 +1,5 @@
-let items = [];
-let active = null;
+let items: NodeListOf<HTMLElement> | null;
+let active: number | null = null;
 let gPressed = false;
 
 const Modes = {
@@ -9,13 +9,14 @@ const Modes = {
 }
 
 let mode = Modes.Timeline;
-const runtime = typeof browser !== "undefined" ? browser.runtime : chrome.runtime;
+const firefox = typeof browser !== "undefined" ? true : false;
+
 
 document.addEventListener("DOMContentLoaded", () => {
     items = document.querySelectorAll(".timeline-item");
     focusOnMain();
 
-    fetch(chrome.runtime.getURL("styles/style.css"))
+    fetch(firefox? browser.runtime.getURL("styles/style.css") : chrome.runtime.getURL("styles/style.css"))
         .then(response => response.text())
         .then(css => {
             var style = document.createElement("style");
@@ -45,6 +46,9 @@ function addChangeObserver() {
 }
 
 function focusOnMain() {
+    if (!items) {
+        return;
+    }
     const mainTweet = document.querySelector(".main-tweet");
     const tweet = mainTweet ? mainTweet : document.querySelector("#m");
     if (!tweet) {
@@ -69,7 +73,10 @@ function prev() {
 }
 
 
-function selectItem(next) {
+function selectItem(next: number) {
+    if (!items) {
+        return;
+    }
     if (next < 0 || next >= items.length) {
         return;
     }
@@ -85,12 +92,17 @@ function selectItem(next) {
 }
 
 function deSelect() {
-    const item = items[active];
-    item.classList.remove('selected');
-    active = null;
+    if (active && items) {
+        const item = items[active];
+        item.classList.remove('selected');
+        active = null;
+    }
 }
 
 function goToLink(selector, newTab = false) {
+    if (!active || !items) {
+        return;
+    }
     const link = items[active].querySelector(selector);
     if (!link) {
         return;
@@ -98,7 +110,11 @@ function goToLink(selector, newTab = false) {
     const href = link.getAttribute('href');
     if (newTab) {
         const resolvedUrl = new URL(href, window.location.href);
-        runtime.sendMessage({ action: "open_tab", url: resolvedUrl });
+        if (firefox) {
+            browser.runtime.sendMessage({ action: "open_tab", url: resolvedUrl });
+        } else {
+            chrome.runtime.sendMessage({ action: "open_tab", url: resolvedUrl });
+        }
     } else {
         window.location.href = href;
     }
@@ -160,7 +176,7 @@ function doTimelineCommand(event) {
         selectItem(0);
     } else if (event.key === 'g' && !gPressed) {
         gPressed = true;
-    } else if (event.key === 'G') {
+    } else if (event.key === 'G' && items) {
         selectItem(items.length - 1);
     } else if (event.key === 'v' && active != null) {
         event.preventDefault();
@@ -182,14 +198,24 @@ function doVisualCommand(event) {
         exitVisualMode();
     } else if (event.key == ' ') {
         const selection = window.getSelection();
+        if (!selection) {
+            return;
+        }
         const range = selection.getRangeAt(0);
-        const parentNode = range.startContainer.parentNode;
+        const parentNode = range.startContainer.parentElement;
 
-        if (parentNode.tagName === 'A') {
+        if (parentNode && parentNode.tagName === 'A') {
             const href = parentNode.getAttribute('href');
+            if (!href) {
+                return;
+            }
             if (event.altKey) {
                 const resolvedUrl = new URL(href, window.location.href);
-                runtime.sendMessage({ action: "open_tab", url: resolvedUrl });
+                if (firefox) {
+                    browser.runtime.sendMessage({ action: "open_tab", url: resolvedUrl });
+                } else {
+                    chrome.runtime.sendMessage({ action: "open_tab", url: resolvedUrl });
+                }
             } else {
                 window.location.href = href;
             }
@@ -209,7 +235,7 @@ function doVisualCommand(event) {
     } else if (event.key === "v") {
         move = !move;
     } else if (event.key === "y") {
-        const selectionText = window.getSelection().toString();
+        const selectionText = window.getSelection()?.toString();
         if (selectionText) {
             navigator.clipboard.writeText(selectionText);
         }
@@ -219,27 +245,36 @@ function doVisualCommand(event) {
 
 function moveCaret(direction, granularity) {
     const selection = window.getSelection();
+    if (!selection) {
+        return;
+    }
     if (number == 0) {
         selection.modify(move ? "move" : "extend", direction, granularity);
     } else {
-        Array(number).fill().forEach(() => {
+        Array(number).fill(0).forEach(() => {
             selection.modify(move ? "move" : "extend", direction, granularity);
         });
     }
 }
 
 function exitVisualMode() {
+    if (!active || !items) {
+        return;
+    }
     move = true;
     mode = Modes.Timeline;
-    const teetContent = items[active].querySelector(".tweet-content");
-    teetContent.contentEditable = false;
-    teetContent.blur();
+    const tweetContent = <HTMLElement>items[active].querySelector(".tweet-content");
+    tweetContent.contentEditable = "false";
+    tweetContent.blur();
 }
 
 function enterVisualMode() {
+    if (!active || !items) {
+        return;
+    }
     mode = Modes.Visual;
-    const tweetContent = items[active].querySelector(".tweet-content");
-    tweetContent.contentEditable = true;
+    const tweetContent = <HTMLElement>items[active].querySelector(".tweet-content");
+    tweetContent.contentEditable = "true";
     tweetContent.setAttribute("spellcheck", "false");
     tweetContent.focus();
 }
